@@ -16,6 +16,7 @@ This Chrome extension hides deployment messages in GitHub Pull Requests for a cl
 
 1. Visit any GitHub Pull Request page.
 2. Deployment messages with the rocket icon will be hidden automatically.
+3. Click on the icon to toggle the extension on/off
 
 ### Contributing
 
