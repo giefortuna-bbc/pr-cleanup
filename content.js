@@ -1,8 +1,33 @@
-// Injects a style to hide deployment messages in GitHub PRs
-const style = document.createElement('style');
-style.textContent = `
-  .js-targetable-element:has(.TimelineItem-badge .octicon-rocket) {
-    display: none !important;
+let prCleanupStyle = null;
+
+function enableCleanup() {
+  if (!prCleanupStyle) {
+    prCleanupStyle = document.createElement('style');
+    prCleanupStyle.textContent = `
+      .js-targetable-element:has(.TimelineItem-badge .octicon-rocket) {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(prCleanupStyle);
   }
-`;
-document.head.appendChild(style);
+}
+
+function disableCleanup() {
+  if (prCleanupStyle && prCleanupStyle.parentNode) {
+    prCleanupStyle.parentNode.removeChild(prCleanupStyle);
+    prCleanupStyle = null;
+  }
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'TOGGLE_PR_CLEANUP') {
+    if (message.enabled) {
+      enableCleanup();
+    } else {
+      disableCleanup();
+    }
+  }
+});
+
+// Enable by default on load
+enableCleanup();
